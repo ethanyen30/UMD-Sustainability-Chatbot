@@ -19,7 +19,7 @@ def check_info(info):
         output = "Thank you! Your fact is valid and will be sent to the database!"
         print("good")
     else:
-        output = llm_answer
+        output = "Sorry. Try to mention something related to sustainability at UMD."
         print("bad")
 
     # first is to reset the input message    
@@ -34,17 +34,18 @@ theme = gr.themes.Glass(
 )
 
 with gr.Blocks(theme=theme) as demo:
-    intro_text = read_text_file("form_submission/intro.txt")
-    intro = gr.Markdown(intro_text)
+    with gr.Tab("Form"):
+        intro_text = read_text_file("form_submission/intro.txt")
+        intro = gr.Markdown(intro_text)
 
-    fact = gr.Textbox(
-        placeholder="Enter Fact Here!",
-        label="Fact:"
-    )
-    
-    output = gr.Textbox(show_label=False)
+        fact = gr.Textbox(
+            placeholder="Enter Fact Here!",
+            label="Fact:"
+        )
+        
+        output = gr.Textbox(show_label=False)
 
-    fact.submit(fn=check_info, inputs=fact, outputs=[fact, output], api_name="check_info")
-    fact.input(fn=reset, outputs=output, api_name="reset")
+        fact.submit(fn=check_info, inputs=fact, outputs=[fact, output], api_name="check_info")
+        fact.input(fn=reset, outputs=output, api_name="reset")
 
-demo.launch()
+demo.launch(debug=True)
