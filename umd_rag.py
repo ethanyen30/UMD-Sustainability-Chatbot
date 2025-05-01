@@ -17,7 +17,7 @@ class UMDRAG:
         return matched
     
     def create_prompt(self, retrieval, query):
-        system_instruction = my_utils.read_text_file('model_instruction.txt')
+        system_instruction = my_utils.read_text_file('datafiles/model_instruction.txt')
         context = ""
         for retrieved in retrieval:
             namespace = retrieved['namespace']
@@ -26,10 +26,10 @@ class UMDRAG:
             if namespace == 'file_data':
                 context += f"Site Title: {content_data['Site_Title']}\n"
                 context += f"Header: {content_data['Header']}\n"
-                context += f"Text: {content_data['Content']}\n\n"
 
             elif namespace == 'own_data':
-                context += f"Text: {content_data['text']}\n\n"
+                pass
+            context += f"Text: {content_data['Content']}\n\n"
 
         prompt = f"Here are your instructions: \n {system_instruction} \n \
                         Here is the context provided to answer the query.\n \
@@ -43,8 +43,11 @@ class UMDRAG:
         run_type='chain',
         metadata={"ls_provider": "google_genai", "ls_model_name": "gemini-2.0-flash-lite"}
     )
-    def pipe(self, query):
+    def pipe(self, query, include_metadata=False):
         retrieval = self.retrieve(query)
         prompt = self.create_prompt(retrieval, query)
         answer = self.generate(prompt)
-        return answer
+        return {
+            'answer': answer,
+            'metadata': retrieval if include_metadata else []
+        }

@@ -57,7 +57,7 @@ class VectorDB:
 
         # Inner helper function to get the name of a 'json' file
         def get_file_name(fname):
-            file_re = re.compile(r'^umd_([A-Za-z0-9]*)_data.json$')
+            file_re = re.compile(r'^datafiles/umd_([A-Za-z0-9]*)_data.json$')
 
             matched = re.match(file_re, fname)
             if matched:
@@ -107,7 +107,7 @@ class VectorDB:
     def upsert_own_data(self, our_data):
 
         # Get current own data id count
-        with open("own_data_id_count.txt", 'r+') as file:
+        with open("datafiles/own_data_id_count.txt", 'r+') as file:
             id = int(file.read())
             file.seek(0)
             file.write(str(id + 1))
@@ -116,7 +116,7 @@ class VectorDB:
         pinecone_form = {}
         pinecone_form["id"] = f"own_data_{id}"
         pinecone_form["values"] = embedded
-        pinecone_form["metadata"] = {"text": our_data}
+        pinecone_form["metadata"] = {"Content": our_data}
 
         self.index.upsert(namespace="own_data", vectors=[pinecone_form])
 
