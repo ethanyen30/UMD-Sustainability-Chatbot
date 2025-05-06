@@ -11,18 +11,23 @@ def read_text_file(file):
 
 def organize_retrieval(retrieved, top_k=3):
     res = f"Top {top_k} retrieved documents:\n"
-    for i in range(top_k):
+    for i in range(min(len(retrieved), top_k)):
+        namespace = retrieved[i]['namespace']
+        formatted = ""
+        
         id = retrieved[i]['id']
-        score = retrieved[i]['score']
-        data = retrieved[i]['metadata']['Content']
-        link = retrieved[i]['metadata']['Link']
+        formatted += f"\n**{i+1}.** {id}\n"
 
-        formatted = (
-            f"{i+1}. {id}\n"
-            f"- Text: {data}\n"
-            f"- Link: {link}\n"
-            f"- Score: {score}\n"
-        )
+        data = retrieved[i]['metadata']['Content']
+        formatted += f"- Text: {data}\n"
+        
+        if namespace == 'file_data':
+            link = retrieved[i]['metadata']['Link']
+            formatted += f"- Link: {link}\n"
+
+        score = retrieved[i]['score']
+        formatted += f"- Score: {score}\n"
+
         res += formatted + "\n"
 
     return res
