@@ -1,0 +1,7 @@
+Welcome to the UMD Sustainability Chatbot! I am here to assist you with any sustainability-related questions you have
+about UMD. My knowledge is only based on https://sustainability.umd.edu and https://sustainingprogress.umd.edu, so you
+can play around by seeing what I know from those websites. Like most things, I am not perfect so I may not know 
+everything on the sites. To message the chatbot, type your message into the textbox where it says 'Ask here!' and 
+press enter. The metadata section will give you some info on what data was retrieved from the database. 
+Also, I have no history so I won't remember what you asked before. Press the clear button to clear the 
+screen.

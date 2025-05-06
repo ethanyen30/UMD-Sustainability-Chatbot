@@ -3,18 +3,11 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 import umd_rag
 import pineconing
 import my_utils
-import importlib
-
-importlib.reload(umd_rag)
-importlib.reload(pineconing)
-importlib.reload(my_utils)
 
 vdb = pineconing.VectorDB()
 google_model = "gemini-2.0-flash-lite"
 llm = ChatGoogleGenerativeAI(model=google_model)
 rag = umd_rag.UMDRAG(vdb, llm)
-
-new_information = []
 
 def check_info(info):
     model = "gemini-2.0-flash"
@@ -24,15 +17,28 @@ def check_info(info):
 
     output = ""
     if llm_answer.lower() == 'yes':
-        new_information.append(info)
         output = "Thank you! Your fact is valid and will be sent to the database!"
-        print("good")
+        vdb.upsert_own_data(info)
     else:
         output = "Sorry. Try to mention something related to sustainability at UMD."
-        print("bad")
 
     # first is to reset the input message    
     return "", output
+
+def get_added_data():
+    ids = []
+    for v in vdb.index.list(namespace='own_data'):
+        ids.extend(v)
+
+    fr = vdb.index.fetch(ids=ids, namespace='own_data')
+    vectors = fr.vectors #dict
+
+    added_data = []
+    for key in sorted(vectors.keys()):
+        value = vectors[key]
+        added_data.append(value.metadata['Content'])
+    
+    return "- " + "\n- ".join(added_data)
 
 def gradio_response(message, chat_history):
     response = rag.pipe(message, include_metadata=True)
@@ -48,19 +54,19 @@ theme = gr.themes.Glass(
 )
 with gr.Blocks(theme=theme) as demo:
     with gr.Tab("Chatbot"):
+        chatbot_intro_text = my_utils.read_text_file('datafiles/chatbot_intro.txt')
+        gr.Markdown(chatbot_intro_text)
         with gr.Row():
             with gr.Column(scale=3):
                 chatbot = gr.Chatbot(type="messages")
-                msg = gr.Textbox()
+                msg = gr.Textbox(show_label=False,
+                                 placeholder='Ask here!',
+                                 max_length=200)
                 clear = gr.ClearButton([msg, chatbot])
 
             with gr.Column(scale=1):
                 gr.Markdown("Metadata")
-                metadata = gr.Textbox(
-                    show_label=False,
-                    lines=20,
-                    interactive=True
-                )
+                metadata = gr.Markdown(container=True)
             
             msg.submit(
                 fn=gradio_response,
@@ -69,8 +75,8 @@ with gr.Blocks(theme=theme) as demo:
             )
         
     with gr.Tab("Enter Your Own Facts!"):
-        intro_text = my_utils.read_text_file("datafiles/intro.txt")
-        intro = gr.Markdown(intro_text)
+        own_data_intro_text = my_utils.read_text_file("datafiles/own_data_intro.txt")
+        gr.Markdown(own_data_intro_text)
 
         fact = gr.Textbox(
             placeholder="Enter Fact Here!",
@@ -80,6 +86,9 @@ with gr.Blocks(theme=theme) as demo:
         output = gr.Textbox(show_label=False)
 
         fact.submit(fn=check_info, inputs=fact, outputs=[fact, output], api_name="check_info")
-        #fact.input(fn=reset, outputs=output, api_name="reset")
+        
+        with gr.Accordion("See all added data:", open=False) as accordion:
+            added_data = gr.Textbox(lines=10, interactive=False, show_label=False)
+        accordion.expand(fn=get_added_data, outputs=added_data)
 
-demo.launch(debug=True)
+demo.launch(debug=True, share=True)
