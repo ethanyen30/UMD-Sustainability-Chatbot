@@ -1,6 +1,3 @@
-# UMD-Sustainability-Chatbot
-For DCC Capstone Project
-
 ---
 title: UMD Sustainability Chatbot
 emoji: 🐢
@@ -12,3 +9,6 @@ app_file: app.py
 pinned: false
 ---
 Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
+
+# UMD-Sustainability-Chatbot
+For DCC Capstone Project
