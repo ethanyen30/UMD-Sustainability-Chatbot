@@ -4,12 +4,25 @@ import umd_rag
 import pineconing
 import my_utils
 
+"""
+Initiate everything needed for the app (chatbot)
+"""
 vdb = pineconing.VectorDB()
 google_model = "gemini-2.0-flash-lite"
 llm = ChatGoogleGenerativeAI(model=google_model)
 rag = umd_rag.UMDRAG(vdb, llm)
 
-def check_info(info):
+"""
+This function checks whether the inputted info is related to sustainability at UMD:
+Inputs:
+    info: str
+    - whatever data the user inputs
+Outpus:
+    (str, str):
+    first str is to reset the input box
+    second str is the output message (whether yes or no)
+"""
+def check_info(info: str):
     model = "gemini-2.0-flash"
     llm = ChatGoogleGenerativeAI(model=model)
     prompt = my_utils.read_text_file("datafiles/sus_check_prompt.txt") + f"\n{info}"
@@ -22,7 +35,6 @@ def check_info(info):
     else:
         output = "Sorry. Try to mention something related to sustainability at UMD."
 
-    # first is to reset the input message    
     return "", output
 
 def get_added_data():
@@ -50,12 +62,17 @@ def gradio_response(message, chat_history):
     return "", chat_history, current_query_metadata
 
 theme = gr.themes.Glass(
-    text_size="lg"
+    primary_hue="green",
+    secondary_hue="green",
+    spacing_size="lg",
+    text_size="lg",
+    font=gr.themes.GoogleFont("Inconsolata"),
+    font_mono="Consolas"
 )
+
 with gr.Blocks(theme=theme) as demo:
     with gr.Tab("Chatbot"):
-        chatbot_intro_text = my_utils.read_text_file('datafiles/chatbot_intro.txt')
-        gr.Markdown(chatbot_intro_text)
+        
         with gr.Row():
             with gr.Column(scale=3):
                 chatbot = gr.Chatbot(type="messages")
@@ -65,8 +82,9 @@ with gr.Blocks(theme=theme) as demo:
                 clear = gr.ClearButton([msg, chatbot])
 
             with gr.Column(scale=1):
-                gr.Markdown("Metadata")
-                metadata = gr.Markdown(container=True)
+                metadata = gr.Markdown(value="Metadata",
+                                       height=580,
+                                       container=True)
             
             msg.submit(
                 fn=gradio_response,
@@ -83,12 +101,18 @@ with gr.Blocks(theme=theme) as demo:
             label="Fact:"
         )
         
-        output = gr.Textbox(show_label=False)
+        output = gr.Markdown(show_label=False, container=False)
 
         fact.submit(fn=check_info, inputs=fact, outputs=[fact, output], api_name="check_info")
         
         with gr.Accordion("See all added data:", open=False) as accordion:
             added_data = gr.Textbox(lines=10, interactive=False, show_label=False)
         accordion.expand(fn=get_added_data, outputs=added_data)
+    
+    with gr.Sidebar():
+        gr.Markdown("**Introduction**")
+        chatbot_intro_text = my_utils.read_text_file('datafiles/chatbot_intro.txt')
+        gr.Markdown(chatbot_intro_text)
 
-demo.launch(debug=True, share=True)
+
+demo.launch(debug=True)

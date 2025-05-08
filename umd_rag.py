@@ -1,20 +1,22 @@
 from langsmith import traceable
-from dotenv import load_dotenv
 import my_utils
 
 class UMDRAG:
 
     def __init__(self, vdb, model):
-        load_dotenv(override=True)
         self.vector_storage = vdb
         self.model = model
 
     @traceable(
         run_type='retriever'
     )
-    def retrieve(self, query, top_k=10):
+    def retrieve(self, query, top_k=10, score_thresh=0.6):
         matched = self.vector_storage.search(query, top_k)
-        return matched
+        good_score_matches = []
+        for match in matched:
+            if match["score"] > score_thresh:
+                good_score_matches.append(match)
+        return good_score_matches
     
     def create_prompt(self, retrieval, query):
         system_instruction = my_utils.read_text_file('datafiles/model_instruction.txt')
