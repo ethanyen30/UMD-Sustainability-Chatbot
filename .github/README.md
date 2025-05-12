@@ -1,5 +1,10 @@
 # UMD-Sustainability-Chatbot
 
-To access and play around with the chatbot, follow this [link](https://huggingface.co/spaces/ethanyen30/UMD-Sustainability-Chatbot). This link does not open in new tab.
+To access and play around with the chatbot, follow this [link](https://huggingface.co/spaces/ethanyen30/UMD-Sustainability-Chatbot). 
 
-## Introduction
+> This link does not open in new tab.
+
+General information is in the link.
+
+## File Information
+Here I will describe what's in each file

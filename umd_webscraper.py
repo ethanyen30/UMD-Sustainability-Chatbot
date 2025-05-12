@@ -218,6 +218,9 @@ class UMDWebScraper:
             if len(chunk['Content']) < 50:
                 continue
             chunk['Content'] = chunk['Content'].replace("\xa0", " ")
+            chunk['Content'] += (f"\nSite Title: {chunk['Site_Title']}"
+                                 f"\nHeader: {chunk['Header']}"
+                                 f"\nLink: {chunk['Link']}")
             cleaned_data.append(chunk)
 
         return cleaned_data

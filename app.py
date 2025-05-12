@@ -152,21 +152,25 @@ with gr.Blocks(theme=theme) as demo:
 
                 @gr.render(inputs=metadata)
                 def render_retrievals(retrievals):
+                    if len(retrievals) == 0:
+                        gr.Markdown("No data retrieved.")
 
-                    for item in retrievals[0:3]:
+                    for idx, item in enumerate(retrievals[0:3]):
                         item_id = item.get("id", "N/A")
                         score = round(item.get("score", 0), 4)
                         content = item.get("metadata", {}).get("Content", "")
                         
-                        preview = content[:200] + "..." if len(content) > 200 else content
+                        preview = content[:150] + "..." if len(content) > 150 else content
                         
-                        with gr.Accordion(label=f"ID: {item_id} | Score: {score}"):
-                            gr.Markdown(f"**Content:** {preview}")
-                            if len(content) > 200:
-                                gr.Markdown(f"<details><summary>Show full content</summary><p>{content}</p></details>")
+                        with gr.Accordion(f"{idx+1}. ID: {item_id} | Score: {score}"):
                             if item['namespace'] != 'own_data':
                                 link = item.get("metadata", {}).get("Link", "#")
-                                gr.Markdown(f"[🔗 Link]({link})")
+                                gr.Markdown(f"🔗 Link: {link}")
+                            else:
+                                gr.Markdown("User entered data:")
+                            gr.Markdown(f"**Content Preview:** {preview}")
+                            if len(content) > 150:
+                                gr.Markdown(f"<details><summary>Show full content</summary><p>{content}</p></details>")
 
                 
     # Enter own facts tab
