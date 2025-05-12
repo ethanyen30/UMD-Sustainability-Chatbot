@@ -1,0 +1,5 @@
+### 📝 Notes about the chatbot: 
+
+- It only knows what is in the sources
+- It does not have history/memory so it won't remember what you typed before
+- It does not have internet access

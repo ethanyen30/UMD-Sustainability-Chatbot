@@ -1,0 +1,8 @@
+## 🛠️ Tools Used
+
+- **Python** - Main Programming Language
+- **Jupyter Notebooks** - For tutorial
+- **Gradio** – User interface
+- **Gemini-Flash-2.0** – Language model
+- **Pinecone** – Vector database for document retrieval
+- **LangChain** – RAG pipeline tracing and debugging

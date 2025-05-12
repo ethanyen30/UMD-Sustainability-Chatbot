@@ -1,0 +1,7 @@
+Type your question below and I’ll do my best to help based on UMD’s official sustainability websites 
+([sustainability.umd.edu](https://sustainability.umd.edu) and
+[sustainingprogress.umd.edu](https://sustainingprogress.umd.edu)).
+Feel free to open up these sites and pick out information to test out the bot.
+Remember I don't have any history so I only respond based on your latest message.
+
+Check the **metadata section on the right** to see what sources were retrieved for your answer and its content.

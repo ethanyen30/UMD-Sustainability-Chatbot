@@ -1,2 +1,0 @@
-Enter any fact and then I'll decide whether it's related to sustainability at UMD.
-If so, I'll submit your fact into the database and it'll be ready to use by the chatbot!

@@ -1,0 +1,7 @@
+## 📞 Contact
+
+Here are some links and contact info if you have any questions:
+
+- Email: eyen30@terpmail.umd.edu
+- [Github](https://github.com/ethanyen30/UMD-Sustainability-Chatbot)
+- [HuggingFace](https://huggingface.co/spaces/ethanyen30/UMD-Sustainability-Chatbot)

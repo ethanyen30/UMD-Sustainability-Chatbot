@@ -1,0 +1,8 @@
+## 🧠 How This Chatbot Works
+
+This app uses a technique called **Retrieval-Augmented Generation (RAG)**:
+1. Your question is turned into a vector (numerical representation).
+2. That vector is used to find the most relevant content from our vector database (Pinecone).
+3. Retrieved content is passed to a large language model (LLM) to generate a custom response.
+
+This approach ensures the AI generates helpful, grounded answers based on trusted UMD sources.

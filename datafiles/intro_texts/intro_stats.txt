@@ -1,0 +1,8 @@
+## 📊 Stats
+
+- **Vector Count**: `> 1620`
+- **Model Used**: `Gemini-Flash-2.0`
+- **Source Websites**:
+  - [sustainability.umd.edu](https://sustainability.umd.edu)
+  - [sustainingprogress.umd.edu](https://sustainingprogress.umd.edu)
+- **Data Last Updated**: `5/13/25`

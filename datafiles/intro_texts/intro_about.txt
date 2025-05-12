@@ -1,0 +1,8 @@
+## 🧪 About This Project
+
+For my DCC capstone project, I wanted to combine my current knowledge in computer science with an issue
+that I deeply care about. As a student, I see my peers recognize sustainability and they are somewhat
+aware. However, they don't all necessarily take action. Therefore, I wondered what I could do to help
+encourage more students to be sustainable. That's what I asked ChatGPT and it was right then that I realized
+I could learn to make a chatbot. After all, almost everyone in college is using AI chatbots to help with
+their schoolwork, which is why I believe that a sustainability geared chatbot can help students as well.

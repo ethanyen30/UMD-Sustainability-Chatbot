@@ -1,0 +1,6 @@
+Do you know something sustainable happening at UMD that isn’t already mentioned?
+Use the textbox below to submit a fact. I’ll check if it’s valid and show whether it’s good to add.
+Before you add a fact, check if the chatbot can currently answer anything about that fact.
+After you add it, check again and you should get a response that includes your fact!
+
+You’ll also see a list of all submitted facts in the expandable section below.

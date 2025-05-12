@@ -1,0 +1,5 @@
+## 💡 How to Navigate
+
+- **Introduction Tab (this one)**: Learn how this tool works behind the scenes.
+- **Chatbot Tab**: Ask questions about UMD’s sustainability practices.
+- **Enter Your Own Facts Tab**: Share a new fact related to UMD sustainability.

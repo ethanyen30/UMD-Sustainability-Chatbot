@@ -1,33 +1,16 @@
 """
 Takes a file and returns a string of the whole file
-Replaces all newlines with a space to sort of 'concatenate'
+If specified, replaces all newlines with a space to sort of 'concatenate'
 everything together.
+Inputs:
+    file: file path
+    concat (default True): concatenates all new lines if true, otherwise just leave it
+Outputs:
+    text in string format
 """
-def read_text_file(file):
-    with open(file, 'r') as f:
+def read_text_file(file, concat=True):
+    with open(file, 'r', encoding='utf-8') as f:
         text = f.read()
-        text = text.replace("\n", " ")
+        if concat:
+            text = text.replace("\n", " ")
     return text
-
-def organize_retrieval(retrieved, top_k=3):
-    res = f"Top {top_k} retrieved documents:\n"
-    for i in range(min(len(retrieved), top_k)):
-        namespace = retrieved[i]['namespace']
-        formatted = ""
-        
-        id = retrieved[i]['id']
-        formatted += f"\n**{i+1}.** {id}\n"
-
-        data = retrieved[i]['metadata']['Content']
-        formatted += f"- Text: {data}\n"
-        
-        if namespace == 'file_data':
-            link = retrieved[i]['metadata']['Link']
-            formatted += f"- Link: {link}\n"
-
-        score = retrieved[i]['score']
-        formatted += f"- Score: {score}\n"
-
-        res += formatted + "\n"
-
-    return res

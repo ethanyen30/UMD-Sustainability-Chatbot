@@ -1,0 +1,7 @@
+# 🌿 Welcome to the UMD Sustainability Chatbot
+
+This chatbot is designed to help you explore sustainability efforts at the University of Maryland 
+using trusted university sources. Whether you're curious about UMD's recycling initiatives, carbon goals, 
+or green buildings, I'm here to assist.
+
+---
