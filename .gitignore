@@ -1,4 +1,5 @@
 venv/
 .env
+
 datafiles/hugging_face_token.txt
-datafiles/RAG_Pipeline.jpg
+
