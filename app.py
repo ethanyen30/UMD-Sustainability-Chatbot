@@ -56,11 +56,9 @@ def get_added_data():
 
 def gradio_response(message, chat_history):
     response = rag.pipe(message, include_metadata=True)
-    # current_query_metadata = my_utils.organize_retrieval(response['metadata'])
     bot_message = response['answer'].content
     chat_history.append({"role": "user", "content": message})
     chat_history.append({"role": "assistant", "content": bot_message})
-    rendered_metadata = render_retrievals(response['metadata'])
     return "", chat_history, response['metadata']
 
 theme = gr.themes.Glass(
@@ -72,6 +70,17 @@ theme = gr.themes.Glass(
 )
 
 with gr.Blocks(theme=theme) as demo:
+    gr.HTML(
+        """
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inconsolata&display=swap');
+
+        * {
+            font-family: 'Inconsolata', monospace !important;
+        }
+        </style>
+        """
+    )
     
     # Introduction Tab
     with gr.Tab("Introduction"):
@@ -151,7 +160,7 @@ with gr.Blocks(theme=theme) as demo:
                         
                         preview = content[:200] + "..." if len(content) > 200 else content
                         
-                        with gr.Accordion(label=f"ID: {item_id} | Score: {score}") as acc:
+                        with gr.Accordion(label=f"ID: {item_id} | Score: {score}"):
                             gr.Markdown(f"**Content:** {preview}")
                             if len(content) > 200:
                                 gr.Markdown(f"<details><summary>Show full content</summary><p>{content}</p></details>")
