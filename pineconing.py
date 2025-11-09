@@ -1,7 +1,9 @@
 from pinecone import Pinecone, ServerlessSpec
 
+import time
 import json
 import re
+from sentence_transformers import SentenceTransformer
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from dotenv import load_dotenv
 
@@ -21,11 +23,14 @@ class VectorDB:
         Index for SentenceTransformer embeddings: "umdsustainabilitychatbot"
         - dimension: 384
 
-        Index for GoogleGenerativeAI embeddings (from langchain_google_genai): "umdsustainabilitychatbot2" - USE THIS
+        Index for GoogleGenerativeAI embeddings (from langchain_google_genai): "umdsustainabilitychatbot2"
         - dimension: 768
+
+        New Index for GoogleGenerativeAI embeddings (from langchain_google_genai): "umdsustainabilitychatbot3" - FIXING THIS
+        - dimension: 3072
         """
         pc = Pinecone()
-        index_name = "umdsustainabilitychatbot2"
+        index_name = "umdsustainabilitychatbot3"
         existing_indexes = [index["name"] for index in pc.list_indexes()]
 
         # create only if it doesn't exist already
@@ -33,7 +38,7 @@ class VectorDB:
             print("Index doesn't exist. Creating...")
             pc.create_index(
                 name=index_name,
-                dimension= 768, # Add embedding dimensions
+                dimension= 384, # Add embedding dimensions
                 metric= "cosine",   # Add your similarity metric
                 spec=ServerlessSpec(
                     cloud="aws",
@@ -48,9 +53,10 @@ class VectorDB:
         """
         Loading embedding model:
         - SentenceTransformer (all-MiniLM-L6-v2)
-        - GoogleGenerativeAIEmbeddings (models/embedding-001)
+        - GoogleGenerativeAIEmbeddings (models/gemini-embedding-001)
         """
-        self.embedding_model = GoogleGenerativeAIEmbeddings(model='models/embedding-001')
+        # self.embedding_model = GoogleGenerativeAIEmbeddings(model='models/gemini-embedding-001')
+        self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
  
     # Files must be in a list format
     def upsert_files(self, files: list):
@@ -79,7 +85,8 @@ class VectorDB:
             # Loop through all the data in one file
             for d in data:
                 content.append(d['Content'])
-            embedded_content = self.embedding_model.embed_documents(content) # Embed in batches because it's faster
+            
+            embedded_content = self.embedding_model.encode_document(content) # Embed in batches because it's faster
             print(f"Embedding everything from {fname} data")
 
             # Create pinecone type of data
@@ -93,12 +100,13 @@ class VectorDB:
                 batch.append(pinecone_form)
 
             total_to_upsert.extend(batch)
+            content.clear()
 
         # upserting 200 vectors batch by batch
         batch_size = 200
         for i in range(len(total_to_upsert) // batch_size + 1):
             start = i*batch_size
-            stop = start + batch_size if len(total_to_upsert) - start > 200 else len(total_to_upsert)
+            stop = start + batch_size if len(total_to_upsert) - start > batch_size else len(total_to_upsert)
             self.index.upsert(namespace="file_data", vectors=total_to_upsert[start:stop])
             print(f"Upserting batch {i}")
 
@@ -112,7 +120,7 @@ class VectorDB:
             file.seek(0)
             file.write(str(id + 1))
 
-        embedded = self.embedding_model.embed_query(our_data)
+        embedded = self.embedding_model.encode_query(our_data)
         pinecone_form = {}
         pinecone_form["id"] = f"own_data_{id}"
         pinecone_form["values"] = embedded
@@ -122,14 +130,16 @@ class VectorDB:
 
     def search(self, query, top_k=10):
         # embed the query
-        query_embedding = self.embedding_model.embed_query(query)
+        # encode() for Sentence Transformers
+        # embed_query() for google embeddings
+        query_embedding = self.embedding_model.encode_query(query)
 
         # Query Pinecone for the top_k most relevant chunks
         # <code to query index>
         search_results = self.index.query_namespaces(
             namespaces=['file_data', 'own_data'],
             metric='cosine',
-            vector=query_embedding,
+            vector=query_embedding.tolist(),
             top_k=top_k,
             include_metadata=True
         )

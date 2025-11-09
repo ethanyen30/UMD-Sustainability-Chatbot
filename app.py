@@ -24,7 +24,7 @@ Outpus:
     second str is the output message (whether yes or no)
 """
 def check_info(info: str):
-    model = "gemini-2.0-flash"
+    model = "gemini-2.0-flash-lite"
     llm = ChatGoogleGenerativeAI(model=model)
     prompt = my_utils.read_text_file("datafiles/sus_check_prompt.txt") + f"\n{info}"
     llm_answer = llm.invoke(prompt).content
@@ -38,6 +38,7 @@ def check_info(info: str):
 
     return "", output
 
+# Function when user wants to see added data
 def get_added_data():
     ids = []
     for v in vdb.index.list(namespace='own_data'):
@@ -53,7 +54,7 @@ def get_added_data():
     
     return "- " + "\n- ".join(added_data)
 
-
+# Chatbot function
 def gradio_response(message, chat_history):
     response = rag.pipe(message, include_metadata=True)
     bot_message = response['answer'].content
@@ -61,6 +62,7 @@ def gradio_response(message, chat_history):
     chat_history.append({"role": "assistant", "content": bot_message})
     return "", chat_history, response['metadata']
 
+# Theme
 theme = gr.themes.Glass(
     primary_hue="green",
     secondary_hue="green",
@@ -69,6 +71,7 @@ theme = gr.themes.Glass(
     font_mono="Consolas"
 )
 
+# App
 with gr.Blocks(theme=theme) as demo:
     gr.HTML(
         """
@@ -132,14 +135,7 @@ with gr.Blocks(theme=theme) as demo:
                                     max_length=200)
                 clear = gr.ClearButton([msg, chatbot])
 
-            # Side to display metadata
-            # with gr.Column(scale=1):
-            #     metadata = gr.Markdown(
-            #         value="### 📄 Retrieved Metadata",
-            #         label="Metadata",
-            #         height=500,
-            #         container=True
-            #     )
+            # Metadata column with dynamics
             with gr.Column(scale=1):
                 gr.Markdown("### 📄 Retrieved Metadata")
                 metadata = gr.State([])

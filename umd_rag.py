@@ -43,7 +43,7 @@ class UMDRAG:
     
     @traceable(
         run_type='chain',
-        metadata={"ls_provider": "google_genai", "ls_model_name": "gemini-2.0-flash-lite"}
+        metadata={"ls_provider": "google_genai", "ls_model_name": "gemini-2.5-flash"}
     )
     def pipe(self, query, include_metadata=False):
         retrieval = self.retrieve(query)
