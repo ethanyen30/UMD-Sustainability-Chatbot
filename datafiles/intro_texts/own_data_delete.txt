@@ -1,0 +1,3 @@
+If you see a user added fact that is incorrect, type the ID number of the fact in the box below.
+See the 'See all added data' section for IDS (ex. if you want to delete own_data_1, then type 1).
+Please be nice to each other and only delete facts that are actually wrong. Thank you.

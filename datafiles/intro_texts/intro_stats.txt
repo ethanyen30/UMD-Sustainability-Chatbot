@@ -1,7 +1,8 @@
 ## 📊 Stats
 
 - **Vector Count**: `>= 1590`
-- **Model Used**: `Gemini-Flash-2.0`
+- **Embedding Model**: `Sentence Transformers`
+- **Language Model**: `Gemini-Flash-2.5`
 - **Source Websites**:
   - [sustainability.umd.edu](https://sustainability.umd.edu)
   - [sustainingprogress.umd.edu](https://sustainingprogress.umd.edu)

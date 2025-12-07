@@ -10,7 +10,7 @@ class UMDRAG:
     @traceable(
         run_type='retriever'
     )
-    def retrieve(self, query, top_k=10, score_thresh=0.6):
+    def retrieve(self, query, top_k, score_thresh):
         matched = self.vector_storage.search(query, top_k)
         good_score_matches = []
         for match in matched:
@@ -45,8 +45,8 @@ class UMDRAG:
         run_type='chain',
         metadata={"ls_provider": "google_genai", "ls_model_name": "gemini-2.5-flash"}
     )
-    def pipe(self, query, include_metadata=False):
-        retrieval = self.retrieve(query)
+    def pipe(self, query, include_metadata=False, top_k=6, retrieval_thresh=0.6):
+        retrieval = self.retrieve(query, top_k=top_k, score_thresh=retrieval_thresh)
         prompt = self.create_prompt(retrieval, query)
         answer = self.generate(prompt)
         return {

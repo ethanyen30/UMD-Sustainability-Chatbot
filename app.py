@@ -9,7 +9,7 @@ import my_utils
 Initiate everything needed for the app (chatbot)
 """
 vdb = pineconing.VectorDB()
-google_model = "gemini-2.0-flash-lite"
+google_model = "gemini-2.5-flash-lite"
 llm = ChatGoogleGenerativeAI(model=google_model)
 rag = umd_rag.UMDRAG(vdb, llm)
 
@@ -24,8 +24,6 @@ Outpus:
     second str is the output message (whether yes or no)
 """
 def check_info(info: str):
-    model = "gemini-2.0-flash-lite"
-    llm = ChatGoogleGenerativeAI(model=model)
     prompt = my_utils.read_text_file("datafiles/sus_check_prompt.txt") + f"\n{info}"
     llm_answer = llm.invoke(prompt).content
 
@@ -45,18 +43,22 @@ def get_added_data():
         ids.extend(v)
 
     fr = vdb.index.fetch(ids=ids, namespace='own_data')
-    vectors = fr.vectors #dict
+    vectors = fr.vectors # dict
 
     added_data = []
     for key in sorted(vectors.keys()):
         value = vectors[key]
-        added_data.append(value.metadata['Content'])
+        added_data.append(f"ID: {key}, Info: {value.metadata['Content']}")
     
-    return "- " + "\n- ".join(added_data)
+    return "- " + "\n- ".join(added_data) + "\n---"
+
+# Function when user wants to delete some user added data
+def delete_added_data(id):
+    return "", vdb.delete_by_id(id, 'own_data')
 
 # Chatbot function
 def gradio_response(message, chat_history):
-    response = rag.pipe(message, include_metadata=True)
+    response = rag.pipe(message, include_metadata=True, top_k=6, retrieval_thresh=0.5)
     bot_message = response['answer'].content
     chat_history.append({"role": "user", "content": message})
     chat_history.append({"role": "assistant", "content": bot_message})
@@ -177,13 +179,21 @@ with gr.Blocks(theme=theme) as demo:
             placeholder="Enter Fact Here!",
             label="Fact:"
         )
-
-        output = gr.Markdown(show_label=False, container=False)
-
-        fact.submit(fn=check_info, inputs=fact, outputs=[fact, output], api_name="check_info")
+        added_output = gr.Markdown(show_label=False, container=False)
+        fact.submit(fn=check_info, inputs=fact, outputs=[fact, added_output], api_name="check_info")
         
-        with gr.Accordion("See all added data:", open=False) as accordion:
+        with gr.Accordion("See all added data (Click again to reload):", open=False) as accordion:
             added_data = gr.Markdown(show_label=False)
+            gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/own_data_delete.txt', False))
+            wrong = gr.Textbox(
+                placeholder="Enter ID number here",
+                label="Delete:",
+                interactive=True
+            )
+            deleted_output = gr.Markdown(show_label=False)
+            wrong.submit(fn=delete_added_data, inputs=wrong, outputs=[wrong, deleted_output])
         accordion.expand(fn=get_added_data, outputs=added_data)
         
+        
+
 demo.launch(debug=True)

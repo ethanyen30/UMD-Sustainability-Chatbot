@@ -145,3 +145,12 @@ class VectorDB:
         )
 
         return search_results.matches
+
+    def delete_by_id(self, id, namespace):
+        name = namespace + '_' + str(id)
+        res = self.index.fetch([name], namespace)
+        if len(res.vectors) == 0:
+            return f"Couldn't find id {id} in added data"
+        else:
+            self.index.delete(ids=[name], namespace=namespace)
+            return f"Successfully deleted id {id} from added data"

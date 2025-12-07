@@ -1,3 +1,3 @@
-Check if this piece of text is related to sustainability at UMD at all.
-If it's somewhat related then just say 'yes' and that's it.
+Check if this piece of text 'looks' like sustainability information at the University of Maryland
+at all. If it's somewhat related and seems true then just say 'yes' and that's it.
 If not, then give a simple, short but valid reason for why it's not:
