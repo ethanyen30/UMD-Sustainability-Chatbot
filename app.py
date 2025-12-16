@@ -87,41 +87,6 @@ with gr.Blocks(theme=theme) as demo:
         """
     )
     
-    # Introduction Tab
-    with gr.Tab("Introduction"):
-
-        # Welcome (Intro)
-        gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro.txt', False))
-
-        # Nav and Notes
-        with gr.Row():
-            gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro_nav.txt', False))
-            gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro_notes.txt', False))
-        gr.Markdown("---")
-
-        # Tools and Stats
-        with gr.Row():
-            gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro_tools.txt', False))
-            gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro_stats.txt', False))
-        gr.Markdown("---")
-
-        # How and Image
-        with gr.Row():
-            gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro_how.txt', False))
-            diagram = Image.open('datafiles/RAG_Pipeline.jpg')
-            width, height = diagram.size
-            diagram = diagram.resize((width // 4, height // 4))
-            gr.Image(diagram)
-        gr.Markdown("---")
-
-        # About
-        with gr.Row():
-            gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro_about.txt', False))
-        gr.Markdown("---")
-
-        # Contact
-        gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro_contact.txt', False))
-
     # Chatbot Tab
     with gr.Tab("Chatbot"):
         gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/chatbot_intro.txt', False))
@@ -170,7 +135,41 @@ with gr.Blocks(theme=theme) as demo:
                             if len(content) > 150:
                                 gr.Markdown(f"<details><summary>Show full content</summary><p>{content}</p></details>")
 
-                
+    # Introduction Tab
+    with gr.Tab("Introduction"):
+
+        # Welcome (Intro)
+        gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro.txt', False))
+
+        # Nav and Notes
+        with gr.Row():
+            gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro_nav.txt', False))
+            gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro_notes.txt', False))
+        gr.Markdown("---")
+
+        # Tools and Stats
+        with gr.Row():
+            gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro_tools.txt', False))
+            gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro_stats.txt', False))
+        gr.Markdown("---")
+
+        # How and Image
+        with gr.Row():
+            gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro_how.txt', False))
+            diagram = Image.open('datafiles/RAG_Pipeline.jpg')
+            width, height = diagram.size
+            diagram = diagram.resize((width // 4, height // 4))
+            gr.Image(diagram)
+        gr.Markdown("---")
+
+        # About
+        with gr.Row():
+            gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro_about.txt', False))
+        gr.Markdown("---")
+
+        # Contact
+        gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/intro_contact.txt', False))
+           
     # Enter own facts tab
     with gr.Tab("Enter Your Own Facts!"):
         gr.Markdown(my_utils.read_text_file('datafiles/intro_texts/own_data_intro.txt', False))
@@ -194,6 +193,4 @@ with gr.Blocks(theme=theme) as demo:
             wrong.submit(fn=delete_added_data, inputs=wrong, outputs=[wrong, deleted_output])
         accordion.expand(fn=get_added_data, outputs=added_data)
         
-        
-
 demo.launch(debug=True)
