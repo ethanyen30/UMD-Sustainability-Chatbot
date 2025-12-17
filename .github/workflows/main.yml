@@ -1,5 +1,7 @@
 name: Sync to Hugging Face hub
 on:
+  schedule:
+    - cron: "0 9 * * *"
   push:
     branches: [main]
   # to run this workflow manually from the Actions tab
