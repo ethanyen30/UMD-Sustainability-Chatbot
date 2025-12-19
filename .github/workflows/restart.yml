@@ -2,8 +2,8 @@ name: Restart Hugging Face Space
 
 on:
   schedule:
-    # Run every 30 minutes - adjust as needed
-    - cron: '* 9 * * *'
+    # Run every day at 9 AM UTC or 4 AM EST
+    - cron: '0 9 * * *'
   # Allow manual trigger
   workflow_dispatch:
 
