@@ -30,5 +30,4 @@ jobs:
           from huggingface_hub import HfApi
           api = HfApi(token='$HF_TOKEN')
           api.restart_space(repo_id='ethanyen30/UMD-Sustainability-Chatbot')
-          echo 'Space restarted successfully!'
           "
