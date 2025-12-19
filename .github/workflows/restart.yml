@@ -1,0 +1,34 @@
+name: Restart Hugging Face Space
+
+on:
+  schedule:
+    # Run every 30 minutes - adjust as needed
+    - cron: '* 9 * * *'
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  restart-space:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Install dependencies
+        run: |
+          pip install huggingface-hub
+      
+      - name: Restart Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python -c "
+          from huggingface_hub import HfApi
+          api = HfApi(token='$HF_TOKEN')
+          api.restart_space(repo_id='ethanyen30/UMD-Sustainability-Chatbot')
+          echo 'Space restarted successfully!'
+          "
